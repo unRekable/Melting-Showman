@@ -1,69 +1,79 @@
 import random
 
-from setuptools.msvc import PLAT_SPEC_TO_RUNTIME
-
 from ascii_art import STAGES
 
-# List of secret words
-WORDS = ["python", "git", "github", "snowman", "meltdown"]
+WORDS = [
+    "python",
+    "git",
+    "github",
+    "snowman",
+    "meltdown",
+]
+
 
 def get_random_word():
-    """Selects a random word from the list."""
-    return WORDS[random.randint(0, len(WORDS) - 1)]
+    """Select a random word from the WORDS list."""
+    return random.choice(WORDS)
 
 
 def display_game_state(mistakes, secret_word, guessed_letters):
-    # Display the snowman stage for the current number of mistakes.
+    """Display the snowman stage and current guessed word state."""
     print(STAGES[mistakes])
-    # Build a display version of the secret word.
-    display_word = ""
 
+    display_word = ""
     for letter in secret_word:
         if letter in guessed_letters:
-            display_word += letter + " "
+            display_word += f"{letter} "
         else:
             display_word += "_ "
-    print("Word: ", display_word)
-    print("\n")
+
+    print(f"Word: {display_word}\n")
 
 
 def play_game():
+    """Run the Snowman Meltdown game loop."""
     secret_word = get_random_word()
     guessed_letters = []
     mistakes = 0
 
     print("Welcome to Snowman Meltdown!")
-    # For now, display the initial game state.
     display_game_state(mistakes, secret_word, guessed_letters)
 
-    # Prompt user for one guess (logic to be enhanced later)
+    max_mistakes = len(STAGES) - 1
+
     while True:
+        # Prompt until a valid single-letter guess is entered
         while True:
             guess = input("Guess a letter: ").lower()
             if len(guess) == 1 and guess.isalpha():
                 break
-            print("Wrong. Please enter only one letter and no numbers.")
+            print("Invalid input. Enter exactly one letter.")
 
         if guess in secret_word:
             guessed_letters.append(guess)
+            print(f"You guessed: {guess}")
         else:
             mistakes += 1
-        print("You guessed:", guess)
-        if mistakes == len(STAGES):
-            print("You lost the game, sorry.")
+            print(f"Wrong guess: {guess}")
+
+        if mistakes > max_mistakes:
+            print("You lost the game. Sorry!")
             if input("Do you want to play again? (y/n): ").lower() == "y":
                 play_game()
             else:
                 print("Thank you for playing!")
-                break
+            break
 
         display_game_state(mistakes, secret_word, guessed_letters)
 
-        s = ""
-        if s.join(guessed_letters) == secret_word:
-            print("You won, congrats!")
+        if all(letter in guessed_letters for letter in secret_word):
+            print("You won! Congratulations!")
             if input("Do you want to play again? (y/n): ").lower() == "y":
                 play_game()
             else:
                 print("Thank you for playing!")
-                break
+            break
+
+
+if __name__ == "__main__":
+    play_game()
