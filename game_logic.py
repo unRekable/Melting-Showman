@@ -42,12 +42,20 @@ def play_game():
             mistakes += 1
         print("You guessed:", guess)
         if mistakes == len(STAGES):
-            print("You lost the game, try again.")
-            break
+            print("You lost the game, sorry.")
+            if input("Do you want to play again? (y/n): ").lower() == "y":
+                play_game()
+            else:
+                print("Thank you for playing!")
+                break
 
         display_game_state(mistakes, secret_word, guessed_letters)
 
         s = ""
         if s.join(guessed_letters) == secret_word:
             print("You won, congrats!")
-            return True
+            if input("Do you want to play again? (y/n): ").lower() == "y":
+                play_game()
+            else:
+                print("Thank you for playing!")
+                break
