@@ -1,4 +1,7 @@
 import random
+
+from setuptools.msvc import PLAT_SPEC_TO_RUNTIME
+
 from ascii_art import STAGES
 
 # List of secret words
@@ -35,7 +38,12 @@ def play_game():
 
     # Prompt user for one guess (logic to be enhanced later)
     while True:
-        guess = input("Guess a letter: ").lower()
+        while True:
+            guess = input("Guess a letter: ").lower()
+            if len(guess) == 1 and guess.isalpha():
+                break
+            print("Wrong. Please enter only one letter and no numbers.")
+
         if guess in secret_word:
             guessed_letters.append(guess)
         else:
